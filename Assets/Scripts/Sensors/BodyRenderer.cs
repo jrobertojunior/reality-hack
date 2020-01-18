@@ -8,10 +8,6 @@ public class BodyRenderer : MonoBehaviour, IReceiver<BodyJoints[]>
 
     private Dictionary<int, Dictionary<JointType, GameObject>> bodySkeletons;
 
-    public bool RelativeToSpine = false;
-    public float scale = 150;
-
-
     // Start is called before the first frame update
     void Start()
     {
@@ -61,25 +57,10 @@ public class BodyRenderer : MonoBehaviour, IReceiver<BodyJoints[]>
                         skeletonJoint.SetActive(true);
                     }
 
-                    if (RelativeToSpine)
-                    {
-                        var spineBase = body.joints[JointType.BaseSpine];
-                        skeletonJoint.transform.localPosition =
-                        new Vector3((bodyJoint.worldPosition.x - spineBase.worldPosition.x) / 1000f,
-                                    (bodyJoint.worldPosition.y - spineBase.worldPosition.y) / 1000f,
-                                    (bodyJoint.worldPosition.z - spineBase.worldPosition.z) / 1000f);
-                    }
-                    else
-                    {
-
-                        skeletonJoint.transform.localPosition =
-                            new Vector3(bodyJoint.worldPosition.x / 1000f,
-                                        bodyJoint.worldPosition.y / 1000f,
-                                        bodyJoint.worldPosition.z / 1000f);
-                    }
-
-                    // scale skeleton
-                    skeletonJoint.transform.localPosition.Scale(new Vector3(scale, scale, scale));
+                    skeletonJoint.transform.localPosition =
+                        new Vector3(bodyJoint.worldPosition.x / 1000f,
+                                    bodyJoint.worldPosition.y / 1000f,
+                                    bodyJoint.worldPosition.z / 1000f);
 
                     skeletonJoint.transform.rotation = Quaternion.LookRotation(bodyJoint.forward, bodyJoint.upwards);
                 }

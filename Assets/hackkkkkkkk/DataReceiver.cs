@@ -19,12 +19,12 @@ public class DataReceiver : MonoBehaviour, Voxar.IReceiver<Voxar.BodyJoints[]>
             {
                 continue;
             }
-            Debug.Log("Processing a body!");
+            //Debug.Log("Processing a body!");
 
             //checks if the current tracked body's head is also being tracked
             if (body.joints.ContainsKey(Voxar.JointType.Head))
             {
-                Debug.Log("Updating head position!");
+                //Debug.Log("Updating head position!");
                 var head = body.joints[Voxar.JointType.Head];
                 this.transform.position = head.worldPosition / 1000.0f;
 
