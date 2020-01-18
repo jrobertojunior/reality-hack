@@ -11,7 +11,7 @@ public class DataReceiver : MonoBehaviour, Voxar.IReceiver<Voxar.BodyJoints[]>
         //if you only wish to track 1 body you can remove this foreach and replace it with:
 
         //var body = data[0];
-        Debug.Log("Receiving Data!");
+        //Debug.Log("Receiving Data!");
         foreach (var body in data)
         {
             //skips the bodies that are not being tracked
@@ -36,7 +36,7 @@ public class DataReceiver : MonoBehaviour, Voxar.IReceiver<Voxar.BodyJoints[]>
     // Start is called before the first frame update
     void Start()
     {
-        
+        print("script started");
     }
 
     // Update is called once per frame
