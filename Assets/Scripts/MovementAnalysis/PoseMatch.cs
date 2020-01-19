@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using Voxar;
+using UnityEngine.Events;
 
 public enum DefaultPose
 {
@@ -11,21 +12,28 @@ public enum DefaultPose
     LeftArmDemotion,
     RightArmDemotion,
     ShouldersElevation,
-    Stiff
+    Stiff,
+    MilDevelop,
+    MilDevelopStart
 };
 
-
+[System.Serializable]
+public class ErrorEvent : UnityEvent<string> { }
 
 public class PoseMatch : MonoBehaviour, IReceiver<BodyJoints[]>
 {
+    public bool canTriggerError = false;
 
     public float angleToleranceAP = 20.0f;
     public float angleToleranceExercise = 10.0f;
     public DefaultPose targetPose = DefaultPose.Upright;
+    public DefaultPose startPose = DefaultPose.Upright;
 
+    public ErrorEvent ErrorNotification = new ErrorEvent();
 
     private DefaultPose oldTarget;
     private BodyAngles targetBodyAngles;
+    private BodyAngles inicialBodyAngles;
 
     [SerializeField]
     private bool gesturePerformed;
@@ -33,7 +41,8 @@ public class PoseMatch : MonoBehaviour, IReceiver<BodyJoints[]>
     private bool inicialPose;
 
 
-
+    private float timer; 
+    public float limitTime = 2.0f;
     private int exercisePositionLast, exercisePositionCurrent = 0;
     private int errorCount, errorTemp;
     // Start is called before the first frame update
@@ -80,6 +89,46 @@ public class PoseMatch : MonoBehaviour, IReceiver<BodyJoints[]>
             case DefaultPose.ShouldersElevation:
                 targetBodyAngles = BodyAngles.LateralShouldersElevation();
                 break;
+            case DefaultPose.MilDevelop:
+                targetBodyAngles = BodyAngles.MilitaryDevelopment();
+                break;
+            case DefaultPose.MilDevelopStart:
+                targetBodyAngles = BodyAngles.MilitaryDevelopmentStart();
+                break;
+        }
+
+        switch (startPose)
+        {
+            case DefaultPose.Upright:
+                inicialBodyAngles = BodyAngles.Upright();
+                break;
+            case DefaultPose.TPose:
+                inicialBodyAngles = BodyAngles.TPose();
+                break;
+            case DefaultPose.MakeContact:
+                inicialBodyAngles = BodyAngles.MakeContact();
+                break;
+            case DefaultPose.LeftArmElevation:
+                inicialBodyAngles = BodyAngles.LateralLeftShoulderElevation();
+                break;
+            case DefaultPose.LeftArmDemotion:
+                inicialBodyAngles = BodyAngles.LateralLeftShoulderDemotion();
+                break;
+            case DefaultPose.RightArmElevation:
+                inicialBodyAngles = BodyAngles.LateralRightShoulderElevation();
+                break;
+            case DefaultPose.RightArmDemotion:
+                inicialBodyAngles = BodyAngles.LateralRightShoulderDemotion();
+                break;
+            case DefaultPose.ShouldersElevation:
+                inicialBodyAngles = BodyAngles.LateralShouldersElevation();
+                break;
+            case DefaultPose.MilDevelop:
+                inicialBodyAngles = BodyAngles.MilitaryDevelopment();
+                break;
+            case DefaultPose.MilDevelopStart:
+                inicialBodyAngles = BodyAngles.MilitaryDevelopmentStart();
+                break;
         }
     }
 
@@ -95,7 +144,7 @@ public class PoseMatch : MonoBehaviour, IReceiver<BodyJoints[]>
             var currentBodyAngles = new BodyAngles(body);
             var errors = MovementAnalyzer.CompareBodyAngles(currentBodyAngles, targetBodyAngles, angleToleranceExercise);
 
-            if (MovementAnalyzer.CompareBodyAngles(currentBodyAngles, BodyAngles.Upright(), angleToleranceAP).Count == 0)
+            if (MovementAnalyzer.CompareBodyAngles(currentBodyAngles, inicialBodyAngles, angleToleranceAP).Count == 0)
             {
                 inicialPose = true;
             }
@@ -103,7 +152,7 @@ public class PoseMatch : MonoBehaviour, IReceiver<BodyJoints[]>
             {
                 inicialPose = false;
             }
-
+                
             if (errors.Count == 0) 
             { 
                 gesturePerformed = true;
@@ -117,24 +166,39 @@ public class PoseMatch : MonoBehaviour, IReceiver<BodyJoints[]>
             Exercise();
             IdentByHeight(body);
 
+            Voxar.Joint Rknee =  body.joints[JointType.RightKnee];
+            Voxar.Joint Lknee =  body.joints[JointType.LeftKnee];
+            Voxar.Joint Rankle = body.joints[JointType.RightFoot];
+            Voxar.Joint Lankle = body.joints[JointType.LeftFoot];
+            Voxar.Joint Rhip = body.joints[JointType.RightHip];
+            Voxar.Joint Lhip = body.joints[JointType.LeftHip];
 
 
+            Vector3 RShin = -(Rknee.worldPosition - Rankle.worldPosition);
+            Vector3 LShin = -(Lknee.worldPosition - Lankle.worldPosition);
+            Vector3 RThigh = (Rknee.worldPosition - Rhip.worldPosition);
+            Vector3 LThigh = (Lknee.worldPosition - Lhip.worldPosition);
 
-            /* Debug.Log("UB n LB:" + currentBodyAngles.SagittalAngles.GetAngle(BoneType.UpperBody, BoneType.LowerBody)
-                 + " LB n LH:" + currentBodyAngles.FrontalAngles.GetAngle(BoneType.LowerBody, BoneType.LeftHipbone) +
-                 " LB n RH:" + currentBodyAngles.FrontalAngles.GetAngle(BoneType.LowerBody, BoneType.RightHipbone)
-                 + " LH n LT:" + currentBodyAngles.SagittalAngles.GetAngle(BoneType.LeftHipbone, BoneType.LeftThigh) +
-                 " LH n RH:" + currentBodyAngles.FrontalAngles.GetAngle(BoneType.LeftHipbone, BoneType.RightHipbone) +
-                 " RH n RT:" + currentBodyAngles.SagittalAngles.GetAngle(BoneType.RightHipbone, BoneType.RightThigh)
+            float RkneeAngle = Vector3.Angle(RShin,RThigh);
+            float LkneeAngle = Vector3.Angle(LShin,LThigh);
+            
+            //float height = Vector3.Distance(head.worldPosition, basefoot) / 1000;
+
+
+            /*Debug.Log("LC n LA:" + currentBodyAngles.FrontalAngles.GetAngle(BoneType.LeftClavicule, BoneType.LeftArm)
+                 + " LC n UB:" + currentBodyAngles.FrontalAngles.GetAngle(BoneType.LeftClavicule, BoneType.UpperBody)
+                 + " LA n LFA:" + currentBodyAngles.FrontalAngles.GetAngle(BoneType.LeftArm, BoneType.LeftForearm) 
+                 + " RC n RA:" + currentBodyAngles.FrontalAngles.GetAngle(BoneType.RightClavicule, BoneType.RightArm) 
+                 + " RC n UB:" + currentBodyAngles.FrontalAngles.GetAngle(BoneType.RightClavicule, BoneType.UpperBody) 
+                 + " RA n RFA" + currentBodyAngles.FrontalAngles.GetAngle(BoneType.RightArm, BoneType.RightForearm) 
                  );*/
-
             
 
-            foreach (var error in errors)
+            /*foreach (var error in errors)
             {
                 
                 //Debug.Log(error.plane + " " + error.boneTypes[0] + "/" + error.boneTypes[1]);
-            }
+            }*/
         }
     }
 
@@ -147,67 +211,37 @@ public class PoseMatch : MonoBehaviour, IReceiver<BodyJoints[]>
                 InicialPose();
                 break;
             case 1:
-                TransitionPose();
-                break;
-            case 2:
-                MovingPose();
-                break;
-            case 3:
                 FinalPose();
                 break;
         }
     }
     private void InicialPose()
     {
-        if(inicialPose == true && gesturePerformed == false)
+        timer += Time.deltaTime;
+        if(inicialPose == false && gesturePerformed == true)
         {
             exercisePositionLast = exercisePositionCurrent;
             exercisePositionCurrent = 1;
+            timer = 0f;
         }
-    }
-    private void TransitionPose()
-    {
-        if (inicialPose == false && gesturePerformed == false)
-        {
-            //exercisePositionLast = exercisePositionCurrent;
-            exercisePositionCurrent = 2;
-        }
-    }
-    private void MovingPose()
-    {
-        if (inicialPose == true && gesturePerformed == false)
-        {
-            if (exercisePositionLast == 0)
-            {
-                errorTemp++;
-                
-                if (errorTemp > 2)
-                {
-                    errorCount++;
-                    Debug.Log("Erro no exercicio" + errorCount);
-                    errorTemp = 0;
-                }
-            }
-            exercisePositionLast = exercisePositionCurrent;
-            exercisePositionCurrent = 0; 
 
-        }
-        else if (inicialPose == false && gesturePerformed == true)
+        else if (timer > limitTime)
         {
-            if (exercisePositionLast == 3)
+            errorCount++;
+            if (canTriggerError)
             {
-                Debug.Log("Exercicio Estranho");
+                Debug.Log("Erro aqui");
+                ErrorNotification.Invoke("> ; error");
             }
-            exercisePositionLast = exercisePositionCurrent;
-            exercisePositionCurrent = 3;
+            timer = 0f;
         }
     }
     private void FinalPose()
     {
-        if (inicialPose == false && gesturePerformed == true)
+        if (inicialPose == true && gesturePerformed == false)
         {
             exercisePositionLast = exercisePositionCurrent;
-            exercisePositionCurrent = 1;
+            exercisePositionCurrent = 0;
         }
     }
 
@@ -219,15 +253,25 @@ public class PoseMatch : MonoBehaviour, IReceiver<BodyJoints[]>
         Vector3 basefoot = (Lankle.worldPosition + Rankle.worldPosition) / 2;
         float height = Vector3.Distance(head.worldPosition, basefoot)/1000;
 
-        Debug.Log(" Altura estimada:" + height);
+        //Debug.Log(" Altura estimada:" + height);
 
-        if (height > 1.5 && height < 1.6)
+        if (height > 1.3 && height < 1.5)
         {
-            GetComponent<TextMesh>().text = "Thiago Lafayette";
-            /*GetComponent<TextMesh>().transform = head.transform.localPosition =
+            //GetComponent<TextMesh>().text = "Thiago Lafayette";
+            //GetComponent<TextMesh>().fontSize = 3;
+            /*GetComponent<TextMesh>().transform {head.transform.localPosition =
                         new Vector3(bodyJoint.worldPosition.x / 1000f,
                                     bodyJoint.worldPosition.y / 1000f,
-                                    bodyJoint.worldPosition.z / 1000f);*/
+                                    bodyJoint.worldPosition.z / 1000f)};*/
+        }
+        else if(height > 1.65)
+        {
+            //GetComponent<TextMesh>().text = "Pinho";
+            //GetComponent<TextMesh>().fontSize = 3;
+        }
+        else
+        {
+            //GetComponent<TextMesh>().text = "";
         }
     }
 

@@ -17,6 +17,8 @@ public class Client : MonoBehaviour
     public void Awake()
     {
         CreateClient();
+
+        //> ; nome; exercicio; loc; ossos errados
     }
 
     private float counter = 0;
@@ -27,6 +29,11 @@ public class Client : MonoBehaviour
         {
             SendMessage("counter: " + counter);
             counter+= 1;
+        }
+        else if(Input.GetKeyDown(KeyCode.S))
+        {
+            SendMessage("> ; carlos ; levantamento-lateral ; espelho ; LeftShoulder");
+
         }
     }
 

@@ -4,6 +4,14 @@ using UnityEngine;
 
 public class TeacherNotification : MonoBehaviour
 {
+    public string clientName;
+
+    public string exerciseName;
+
+    public string location;
+
+    public string bonesInvolved;
+
     void Start()
     {
         
@@ -12,6 +20,10 @@ public class TeacherNotification : MonoBehaviour
     void Update()
     {
     }
+
+    public void NotificationArrived(string msg) {
+        print(msg);
+    } 
 
     public void PrintMessage(string msg)
     {

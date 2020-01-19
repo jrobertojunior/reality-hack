@@ -405,10 +405,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f19c42aa158bbbc43a200c675e360d3b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  angleToleranceShoulder: 10
-  angleToleranceArm: 10
+  canTriggerError: 0
+  angleToleranceAP: 20
+  angleToleranceExercise: 10
   targetPose: 0
+  startPose: 1
+  ErrorNotification:
+    m_PersistentCalls:
+      m_Calls: []
   gesturePerformed: 0
+  inicialPose: 0
+  limitTime: 1.5
 --- !u!4 &929417320
 Transform:
   m_ObjectHideFlags: 0
@@ -531,7 +538,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1244257232
 Transform:
   m_ObjectHideFlags: 0
@@ -558,10 +565,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f19c42aa158bbbc43a200c675e360d3b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  angleToleranceShoulder: 10
-  angleToleranceArm: 10
-  targetPose: 0
+  canTriggerError: 0
+  angleToleranceAP: 15
+  angleToleranceExercise: 12
+  targetPose: 7
+  startPose: 1
+  ErrorNotification:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1946618854}
+        m_MethodName: SendMessage
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   gesturePerformed: 0
+  inicialPose: 0
+  limitTime: 1.5
 --- !u!1 &1557866964
 GameObject:
   m_ObjectHideFlags: 0
@@ -923,7 +948,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1959659101
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1228,7 +1253,7 @@ PrefabInstance:
     - target: {fileID: 7010840065987318319, guid: 29ccbd4b32fe14148b94516daf16f070,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7010840066624400252, guid: 29ccbd4b32fe14148b94516daf16f070,
         type: 3}
