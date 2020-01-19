@@ -210,7 +210,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &176894589
 Transform:
   m_ObjectHideFlags: 0
@@ -218,12 +218,12 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 176894588}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 283.42615, y: 191.54297, z: -913.96875}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 18.898895, y: -13.9895935, z: 97.03168}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_Father: {fileID: 1271314751}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &176894590
 MonoBehaviour:
@@ -234,9 +234,24 @@ MonoBehaviour:
   m_GameObject: {fileID: 176894588}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 031eb5661c0687d46b8d1ae231dde432, type: 3}
+  m_Script: {fileID: 11500000, guid: 49df2315d3ac67f44b4d25cf8d340a21, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  port: 27002
+  OnNewMessage:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1271314750}
+        m_MethodName: PrintMessage
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 1
 --- !u!114 &176894591
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -249,6 +264,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 73223c3bfa3fd2f47a92c052783f2174, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  port: 27002
 --- !u!1 &571231777
 GameObject:
   m_ObjectHideFlags: 0
@@ -461,7 +477,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f19c42aa158bbbc43a200c675e360d3b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  angleTolerance: 10
+  angleToleranceShoulder: 10
+  angleToleranceArm: 10
   targetPose: 0
   gesturePerformed: 0
 --- !u!4 &929417320
@@ -613,9 +630,54 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f19c42aa158bbbc43a200c675e360d3b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  angleTolerance: 10
+  angleToleranceShoulder: 10
+  angleToleranceArm: 10
   targetPose: 0
   gesturePerformed: 0
+--- !u!1 &1271314749
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1271314751}
+  - component: {fileID: 1271314750}
+  m_Layer: 0
+  m_Name: TeacherReceiver
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1271314750
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1271314749}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 41688134d65e8e3478a1a962a7f19f64, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &1271314751
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1271314749}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 264.52725, y: 205.53256, z: -1011.0004}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 176894589}
+  m_Father: {fileID: 0}
+  m_RootOrder: 9
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1738365239
 GameObject:
   m_ObjectHideFlags: 0
@@ -890,7 +952,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1959659101
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1195,7 +1257,7 @@ PrefabInstance:
     - target: {fileID: 7010840065987318319, guid: 29ccbd4b32fe14148b94516daf16f070,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7010840066624400252, guid: 29ccbd4b32fe14148b94516daf16f070,
         type: 3}

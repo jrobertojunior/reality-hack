@@ -1,10 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+
+[System.Serializable]
+public class MessageEvent : UnityEvent<string> { }
 
 public class UDPSocket : MonoBehaviour
 {
@@ -13,6 +17,8 @@ public class UDPSocket : MonoBehaviour
     private State state = new State();
     private EndPoint epFrom = new IPEndPoint(IPAddress.Any, 0);
     private AsyncCallback recv = null;
+
+    public MessageEvent OnNewMessage;
 
     public string msg;
 
@@ -52,8 +58,10 @@ public class UDPSocket : MonoBehaviour
             State so = (State)ar.AsyncState;
             int bytes = _socket.EndReceiveFrom(ar, ref epFrom);
             _socket.BeginReceiveFrom(so.buffer, 0, bufSize, SocketFlags.None, ref epFrom, recv, so);
-            msg = string.Format("RECV: {0}: {1}, {2}", epFrom.ToString(), bytes, Encoding.ASCII.GetString(so.buffer, 0, bytes));
-            Console.WriteLine(msg);
+            //msg = string.Format("RECV: {0}: {1}, {2}", epFrom.ToString(), bytes, Encoding.ASCII.GetString(so.buffer, 0, bytes));
+            var msg2 = Encoding.ASCII.GetString(so.buffer, 0, bytes);
+            //Console.WriteLine(msg);
+            OnNewMessage.Invoke(msg2);
         }, state);
     }
 }
