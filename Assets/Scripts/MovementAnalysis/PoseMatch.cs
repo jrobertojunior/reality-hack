@@ -7,13 +7,16 @@ public enum DefaultPose
     Upright,
     MakeContact,
     LeftArmElevation,
-    LeftArmDemotion
+    RightArmElevation,
+    LeftArmDemotion,
+    RightArmDemotion
 };
 
 public class PoseMatch : MonoBehaviour, IReceiver<BodyJoints[]>
 {
 
-    public float angleTolerance = 10.0f;
+    public float angleToleranceShoulder = 10.0f;
+    public float angleToleranceArm = 10.0f;
     public DefaultPose targetPose = DefaultPose.Upright;
 
 
@@ -52,10 +55,16 @@ public class PoseMatch : MonoBehaviour, IReceiver<BodyJoints[]>
             case DefaultPose.MakeContact:
                 targetBodyAngles = BodyAngles.MakeContact();
                 break;
-            case DefaultPose.ArmElevation:
+            case DefaultPose.LeftArmElevation:
+                targetBodyAngles = BodyAngles.LateralLeftShoulderElevation();
+                break;
+            case DefaultPose.LeftArmDemotion:
+                targetBodyAngles = BodyAngles.LateralLeftShoulderDemotion();
+                break;
+            case DefaultPose.RightArmElevation:
                 targetBodyAngles = BodyAngles.LateralRightShoulderElevation();
                 break;
-            case DefaultPose.ArmDemotion:
+            case DefaultPose.RightArmDemotion:
                 targetBodyAngles = BodyAngles.LateralRightShoulderDemotion();
                 break;
         }
@@ -71,7 +80,7 @@ public class PoseMatch : MonoBehaviour, IReceiver<BodyJoints[]>
             }
 
             var currentBodyAngles = new BodyAngles(body);
-            var errors = MovementAnalyzer.CompareBodyAngles(currentBodyAngles, targetBodyAngles, angleTolerance);
+            var errors = MovementAnalyzer.CompareBodyAngles(currentBodyAngles, targetBodyAngles, angleToleranceShoulder);
 
             if (errors.Count == 0) { gesturePerformed = true; }
             else { gesturePerformed = false; }
