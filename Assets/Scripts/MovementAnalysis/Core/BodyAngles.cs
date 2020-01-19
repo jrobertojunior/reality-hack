@@ -66,6 +66,25 @@
             return pose;
         }
 
+        public static BodyAngles LateralLeftShoulderElevation()
+        {
+            var pose = new BodyAngles();
+
+            pose.FrontalAngles.AddAngle(BoneType.LeftArm, BoneType.LeftClavicule, 0);
+            pose.FrontalAngles.AddAngle(BoneType.LeftArm, BoneType.LeftForearm, 0);
+
+            return pose;
+        }
+        public static BodyAngles LateralLeftShoulderDemotion()
+        {
+            var pose = new BodyAngles();
+
+            pose.FrontalAngles.AddAngle(BoneType.LeftArm, BoneType.LeftClavicule, 90);
+            pose.FrontalAngles.AddAngle(BoneType.LeftArm, BoneType.LeftForearm, 0);
+
+            return pose;
+        }
+
         public static BodyAngles LateralRightShoulderElevation()
         {
             var pose = new BodyAngles();
