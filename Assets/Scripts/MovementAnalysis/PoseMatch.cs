@@ -52,10 +52,10 @@ public class PoseMatch : MonoBehaviour, IReceiver<BodyJoints[]>
             case DefaultPose.MakeContact:
                 targetBodyAngles = BodyAngles.MakeContact();
                 break;
-            case DefaultPose.ArmElevation:
+            case DefaultPose.LeftArmElevation:
                 targetBodyAngles = BodyAngles.LateralRightShoulderElevation();
                 break;
-            case DefaultPose.ArmDemotion:
+            case DefaultPose.LeftArmDemotion:
                 targetBodyAngles = BodyAngles.LateralRightShoulderDemotion();
                 break;
         }
