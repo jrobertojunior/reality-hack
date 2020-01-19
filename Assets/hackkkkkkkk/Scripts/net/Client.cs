@@ -6,7 +6,7 @@ using UnityEngine.Networking;
 public class Client : MonoBehaviour
 {
     int port = 9999;
-    string ip = "localhost";
+    public string ip = "localhost";
 
     // The id we use to identify our messages and register the handler
     short messageID = 1000;
@@ -17,6 +17,17 @@ public class Client : MonoBehaviour
     public void Awake()
     {
         CreateClient();
+    }
+
+    private float counter = 0;
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            SendMessage("counter: " + counter);
+            counter+= 1;
+        }
     }
 
     void CreateClient()
@@ -73,5 +84,14 @@ public class Client : MonoBehaviour
         var objectMessage = netMessage.ReadMessage<MyNetworkMessage>();
 
         Debug.Log("Message received: " + objectMessage.message);
+    }
+
+    public void SendMessage(string msg)
+    {
+        MyNetworkMessage messageContainer = new MyNetworkMessage();
+        messageContainer.message = msg;
+
+        // Say hi to the server when connected
+        client.Send(messageID, messageContainer);
     }
 }
