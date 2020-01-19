@@ -11,13 +11,19 @@ public class UDPSender : MonoBehaviour
     [SerializeField]
     private int port = 27002;
 
+    [SerializeField]
+    private string Ip = "127.0.0.1";
+
+    private float timeToSend = 1.0f;
+    private float accumulator = 0.0f;
+
     void Start()
     {
         //s = new UDPSocket();
         //s.Server("127.0.0.1", 27002);
 
         c = new UDPSocket();
-        c.Client("127.0.0.1", port);
+        c.Client(Ip, port);
         c.Send("initial msg");
 
         //s.OnNewMessage = new MessageEvent();
@@ -28,19 +34,16 @@ public class UDPSender : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.S))
+        if (accumulator > timeToSend || Input.GetKeyDown(KeyCode.S))
         {
+            accumulator = 0;
             var msg = "counter " + counter.ToString();
             c.Send(msg);
             print("sender: " + msg);
             counter += 1;
+        } else
+        {
+            accumulator += Time.deltaTime;
         }
     }
-
-    //void NewMessage(string msg)
-    //{
-    //    print("> s-received: " + msg);
-    //    OnNewMessageEvent.Invoke(msg);
-    //    NoArgumentEvent.Invoke();
-    //}
 }
